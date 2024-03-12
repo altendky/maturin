@@ -535,6 +535,8 @@ jobs:
         platform:
           - target: armv5te-unknown-linux-gnueabi
             apt-packages: gcc-arm-linux-gnueabi
+          - target: loongarch64-unknown-linux-gnu
+            apt-packages: llvm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -548,6 +550,10 @@ jobs:
       - name: Cache cargo build
         uses: Swatinem/rust-cache@v2
       - name: cargo check
+        env:
+          CARGO_TARGET_LOONGARCH64_UNKNOWN_LINUX_GNU_LINKER: clang
+          CC_loongarch64_unknown_linux_gnu: clang
+          AR_loongarch64_unknown_linux_gnu: llvm-ar
         run: cargo check --target ${{ matrix.platform.target }}
 
   conclusion:
